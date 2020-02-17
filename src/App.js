@@ -1,11 +1,8 @@
 import React from 'react';
 import './App.css';
-
-//import Product from './components/productComponent/Product';
 import Search from './components/searchComponent/Search';
-
-import productos from './bd/productos.json';
 import Product from './components/productComponent/Product';
+import Container from '@material-ui/core/Container';
 
 class App extends React.Component {
   
@@ -26,8 +23,13 @@ class App extends React.Component {
 
   //Funcion para cargar los productos
   getProducts = () => {
-    this.setState({
-      products: productos
+    //Para datos consumidos desde API
+    fetch('http://localhost:3030/')
+    .then(res => res.json())
+    .then( res => {
+        this.setState({
+          products : res
+        })
     });
   }
 
@@ -46,25 +48,27 @@ class App extends React.Component {
   }
 
   render(){
-    
-    if(this.state.products.length == 0){
-    console.log("cargandooo");
+
+    if(this.state.products.length === 0){
       return(
           <h1>Cargando productos</h1>
       );
     }
 
-    console.log("cargaasdasdsndooo");
     return (
-      <div>
-        <Search filterInput={this.filterText}
-					checkInput={this.checkProducts}/>
-
-        <Product products={this.state.products}
-					filterText={this.state.filter}
-					inStockOnly={this.state.stock}/>
-        
-      </div>
+      <Container fixed>
+        <div style={{ backgroundColor: '#fafafa', height: '100vh', textAlign: 'center' }}>
+          <div>
+          <Search filterInput={this.filterText}
+            checkInput={this.checkProducts}/>
+          </div>
+          <div>
+          <Product products={this.state.products}
+            filterText={this.state.filter}
+            inStockOnly={this.state.stock}/>
+          </div> 
+        </div>
+      </Container>
     );
   }
 }
